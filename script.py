@@ -1,4 +1,4 @@
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 import argparse
 import pathlib
@@ -75,11 +75,11 @@ def process_file(file_path: pathlib.Path) -> None:
     except UnicodeDecodeError as error:
         if args.verbose:
             print(paint("[Warning]", color.YELLOW),
-                paint("Skipping", color.AQUA),
-                paint(file_path, color.WHITE),
-                paint(f"\n[Reason]", color.YELLOW),
-                paint(error.__class__.__name__, color.BOLD + color.AQUA) + paint(":", color.WHITE),
-                paint(error, color.RED))
+                  paint("Skipping", color.AQUA),
+                  paint(file_path, color.WHITE),
+                  paint(f"\n[Reason]", color.YELLOW),
+                  paint(error.__class__.__name__, color.BOLD + color.AQUA) + paint(":", color.WHITE),
+                  paint(error, color.RED))
         return
     printed_file = False
     for lino, line in enumerate(content.split(NEWLINE)):
@@ -88,6 +88,8 @@ def process_file(file_path: pathlib.Path) -> None:
                 printed_file = True
                 if not args.silent:
                     print()
+                print(paint("Pattern:", color.WHITE),
+                      paint(args.pattern, color.RED))
                 print(paint("[Match]", color.LIME), paint(file_path, color.WHITE))
             if args.silent:
                 continue
