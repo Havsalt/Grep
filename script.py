@@ -88,8 +88,8 @@ def process_file(file_path: pathlib.Path) -> None:
                 printed_file = True
                 if not args.silent:
                     print()
-                print(paint("Pattern:", color.WHITE),
-                      paint(args.pattern, color.RED))
+                    print(paint("Pattern:", color.WHITE),
+                        paint(args.pattern, color.RED))
                 print(paint("[Match]", color.LIME), paint(file_path, color.WHITE))
             if args.silent:
                 continue
