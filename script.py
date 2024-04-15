@@ -1,4 +1,4 @@
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 import argparse
 import pathlib
@@ -76,7 +76,7 @@ def process_file(file_path: pathlib.Path) -> None:
         if args.verbose:
             print(paint("[Warning]", color.YELLOW),
                   paint("Skipping", color.AQUA),
-                  paint(file_path, color.WHITE),
+                  paint(f'"{file_path}"', color.WHITE),
                   paint(f"\n[Reason]", color.YELLOW),
                   paint(error.__class__.__name__, color.BOLD + color.AQUA) + paint(":", color.WHITE),
                   paint(error, color.RED))
@@ -90,7 +90,7 @@ def process_file(file_path: pathlib.Path) -> None:
                     print()
                     print(paint("Pattern:", color.WHITE),
                         paint(args.pattern, color.RED))
-                print(paint("[Match]", color.LIME), paint(file_path, color.WHITE))
+                print(paint("[Match]", color.LIME), paint(f'"{file_path}"', color.WHITE))
             if args.silent:
                 continue
             for match in matches:
