@@ -6,7 +6,7 @@ authors = [
     { name = "Havsalt", email = "knutolaihelgesen@gmail.com" }
 ]
 dependencies = [
-    "actus==0.2.1",
+    "actus~=0.3.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
