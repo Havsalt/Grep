@@ -1,0 +1,33 @@
+[project]
+name = "grep"
+dynamic = ["version"]
+description = "Add your description here"
+authors = [
+    { name = "Havsalt", email = "knutolaihelgesen@gmail.com" }
+]
+dependencies = [
+    "actus==0.2.1",
+]
+readme = "README.md"
+requires-python = ">= 3.10"
+license = { text = "MIT" }
+
+[project.scripts]
+"main" = "script:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.version]
+path = "script.py"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+include = ["script.py", "grep.bat"]
