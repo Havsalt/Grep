@@ -1,18 +1,21 @@
-__version__ = "0.2.4"
+__version__ = "0.3.0"
 
 import argparse
 import pathlib
 import re
 from typing import Generator
-import color
-from color import paint
+
+import colex
+from actus import info, warn, LogSection
 
 
 NEWLINE = "\n"
 DOT = "."
 
+match_log = LogSection("Match")
 
-class ParserArgs(argparse.Namespace):
+
+class ParserArguments(argparse.Namespace):
     path: str
     pattern: str
     depth: int | None
@@ -23,9 +26,9 @@ class ParserArgs(argparse.Namespace):
 
 
 parser = argparse.ArgumentParser(
-    prog="Grep",
+    prog="grep",
     description="Know which file and where, that contains specified regular expression"
-    )
+)
 parser.add_argument("pattern")
 parser.add_argument("-v", "--version",
                     action="version",
@@ -58,7 +61,7 @@ group.add_argument("--verbose",
 group.add_argument("--silent",
                     action="store_true",
                     help="Display less information during execution")
-args = ParserArgs()
+args = ParserArguments()
 parser.parse_args(namespace=args)
 
 absolute_path = (pathlib.Path
@@ -74,12 +77,8 @@ def process_file(file_path: pathlib.Path) -> None:
         content = pathlib.Path(file_path).read_text(encoding="utf-8")
     except UnicodeDecodeError as error:
         if args.verbose:
-            print(paint("[Warning]", color.YELLOW),
-                  paint("Skipping", color.AQUA),
-                  paint(f'"{file_path}"', color.WHITE),
-                  paint(f"\n[Reason]", color.YELLOW),
-                  paint(error.__class__.__name__, color.BOLD + color.AQUA) + paint(":", color.WHITE),
-                  paint(error, color.RED))
+            warn(f"Skipping $['{file_path}']")
+            info(f"Caused by {error.__class__.__name__}$[:] {error}")
         return
     printed_file = False
     for lino, line in enumerate(content.split(NEWLINE)):
@@ -88,18 +87,26 @@ def process_file(file_path: pathlib.Path) -> None:
                 printed_file = True
                 if not args.silent:
                     print()
-                    print(paint("Pattern:", color.WHITE),
-                        paint(args.pattern, color.RED))
-                print(paint("[Match]", color.LIME), paint(f'"{file_path}"', color.WHITE))
+                    print(colex.colorize("Pattern:", colex.WHITE),
+                          colex.colorize(args.pattern, colex.RED))
+                match_log(f'$["{file_path}"]')
             if args.silent:
                 continue
-            for match in matches:
-                highlight_styling = color.BOLD + color.BLUE
-                print(f"  {paint(lino, color.RED)}{paint(')', color.WHITE)} " + line.replace(match, paint(match, highlight_styling)))
-                print(f"  {' ' * len(str(lino))}{paint(':', color.WHITE)}", paint(match, color.CORAL))
+            with match_log:
+                for match in matches:
+                    highlight_styling = colex.BOLD + colex.BLUE
+                    number = colex.colorize(str(lino), colex.RED)
+                    replaced = line.replace(match, colex.colorize(match, highlight_styling))
+                    match_log(f"{number}$[)] {replaced}")
+                    margin = ' ' * len(str(lino))
+                    matched = colex.colorize(match, colex.CORAL)
+                    match_log(f"{margin}$[:]", matched)
 
 
-def walk_paths(start: pathlib.Path, depth: int | None = None) -> Generator[pathlib.Path, None, None]:
+def walk_paths(
+    start: pathlib.Path,
+    depth: int | None = None
+) -> Generator[pathlib.Path, None, None]:
     if depth is not None:
         if depth <= 0:
             return
