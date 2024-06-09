@@ -12,3 +12,4 @@ actus==0.4.0
     # via grep
 colex==0.1.0
     # via actus
+    # via grep
