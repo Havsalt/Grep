@@ -6,8 +6,8 @@ authors = [
     { name = "Havsalt", email = "knutolaihelgesen@gmail.com" }
 ]
 dependencies = [
-    "actus~=0.4.0",
-    "colex~=0.1.0",
+    "actus~=0.7.0",
+    "colex~=0.2.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -25,7 +25,7 @@ managed = true
 dev-dependencies = []
 
 [tool.hatch.version]
-path = "script.py"
+path = "grep/__init__.py"
 
 [tool.hatch.metadata]
 allow-direct-references = true
